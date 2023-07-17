@@ -47,6 +47,23 @@ test('blog id is correctly named', async () => {
   response.body.forEach(blog => expect(blog.id).toBeDefined())
 })
 
+
+test('can add a blog to the database', async () => {
+
+  const blogsAtBeginning = await api.get('/api/blogs')
+  const newBlog = {
+    "title": "Test",
+    "author": "Test Author",
+    "url": "www.test.com",
+    "likes": 10
+  }
+
+  await api.post('/api/blogs').send(newBlog)
+
+  const blogsAtEnd = await api.get('/api/blogs')
+  expect(blogsAtEnd.body).toHaveLength(blogsAtBeginning.body.length + 1)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
